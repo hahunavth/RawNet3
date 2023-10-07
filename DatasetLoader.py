@@ -1,10 +1,8 @@
 import torch
 import numpy as np
-import random
 import os
 import glob
 import soundfile
-from scipy.io import wavfile
 from torch.utils.data import Dataset, DataLoader
 import torch.distributed as dist
 
@@ -43,10 +41,9 @@ def loadWAV(filename, max_frames, evalmode=True, num_eval=10):
     return feat
 
 class train_dataset_loader(Dataset):
-    def __init__(self, train_list, augment, max_frames, train_path, **kwargs):
+    def __init__(self, train_list, max_frames, train_path, **kwargs):
         self.train_list = train_list
         self.max_frames = max_frames
-        self.augment = augment
         self.train_path = train_path
 
         with open(train_list) as dataset_file:
@@ -73,17 +70,6 @@ class train_dataset_loader(Dataset):
 
         for index in indices:
             audio = loadWAV(self.data_list[index], self.max_frames, evalmode=False)
-
-            if self.augment:
-                augtype = random.randint(0, 4)
-                if augtype == 1:
-                    audio = self.augment_wav.reverberate(audio)
-                elif augtype == 2:
-                    audio = self.augment_wav.additive_noise('music', audio)
-                elif augtype == 3:
-                    audio = self.augment_wav.additive_noise('speech', audio)
-                elif augtype == 4:
-                    audio = self.augment_wav.additive_noise('noise', audio)
 
             feat.append(audio)
 
