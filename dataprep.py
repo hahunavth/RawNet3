@@ -20,21 +20,15 @@ from scipy.io import wavfile
 # ========== ===========
 parser = argparse.ArgumentParser(description="VoxCeleb downloader")
 
-parser.add_argument('--train_list', type=str,   default="/kaggle/working/ECAPA-VLSP23/train_list.txt", help='The path of the training list')
-parser.add_argument('--train_path', type=str,   default="/kaggle/input/vlsp-sv-2023/vietnam_celeb", help='The path of the training data')
-parser.add_argument('--eval_list',  type=str,   default="/kaggle/working/ECAPA-VLSP23/eval_list.txt", help='The path of the evaluation list')
-parser.add_argument('--eval_path',  type=str,   default="/kaggle/input/vlsp-sv-2023/vietnam_celeb", help='The path of the evaluation data')
-parser.add_argument('--save_path',  type=str,   default="exps/exp1", help='Path to save the score.txt and models')
-parser.add_argument('--initial_model',  type=str, default="", help='Path of the initial_model')
 
-# parser.add_argument('--save_path',     type=str, default="data", help='Target directory');
-# parser.add_argument('--user',         type=str, default="user", help='Username');
-# parser.add_argument('--password',     type=str, default="pass", help='Password');
+parser.add_argument('--save_path',     type=str, default="data", help='Target directory');
+parser.add_argument('--user',         type=str, default="user", help='Username');
+parser.add_argument('--password',     type=str, default="pass", help='Password');
 
-# parser.add_argument('--download', dest='download', action='store_true', help='Enable download')
-# parser.add_argument('--extract',  dest='extract',  action='store_true', help='Enable extract')
-# parser.add_argument('--convert',  dest='convert',  action='store_true', help='Enable convert')
-# parser.add_argument('--augment',  dest='augment',  action='store_true', help='Download and extract augmentation files')
+parser.add_argument('--download', dest='download', action='store_true', help='Enable download')
+parser.add_argument('--extract',  dest='extract',  action='store_true', help='Enable extract')
+parser.add_argument('--convert',  dest='convert',  action='store_true', help='Enable convert')
+parser.add_argument('--augment',  dest='augment',  action='store_true', help='Download and extract augmentation files')
 
 args = parser.parse_args()
 
