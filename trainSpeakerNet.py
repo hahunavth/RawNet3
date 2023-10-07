@@ -74,7 +74,7 @@ parser.add_argument('--train_list', type=str,   default="/kaggle/working/ECAPA-V
 parser.add_argument('--train_path', type=str,   default="/kaggle/input/vlsp-sv-2023/vietnam_celeb", help='The path of the training data')
 parser.add_argument('--eval_list',  type=str,   default="/kaggle/working/ECAPA-VLSP23/eval_list.txt", help='The path of the evaluation list')
 parser.add_argument('--eval_path',  type=str,   default="/kaggle/input/vlsp-sv-2023/vietnam_celeb", help='The path of the evaluation data')
-parser.add_argument('--initial_model',  type=str, default="", help='Path of the initial_model')
+# parser.add_argument('--initial_model',  type=str, default="", help='Path of the initial_model')
 
 ## Model definition
 parser.add_argument('--n_mels',         type=int,   default=40,     help='Number of mel filterbanks')
