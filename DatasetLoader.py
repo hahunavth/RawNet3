@@ -54,117 +54,117 @@ def loadWAV(filename, max_frames, evalmode=True, num_eval=10):
 
     return feat;
     
-# class AugmentWAV(object):
+class AugmentWAV(object):
 
-#     def __init__(self, musan_path, rir_path, max_frames):
+    def __init__(self, max_frames):
 
-#         self.max_frames = max_frames
-#         self.max_audio  = max_audio = max_frames * 160 + 240
+        self.max_frames = max_frames
+        self.max_audio  = max_audio = max_frames * 160 + 240
 
-#         self.noisetypes = ['noise','speech','music']
+        # self.noisetypes = ['noise','speech','music']
 
-#         self.noisesnr   = {'noise':[0,15],'speech':[13,20],'music':[5,15]}
-#         self.numnoise   = {'noise':[1,1], 'speech':[3,7],  'music':[1,1] }
-#         self.noiselist  = {}
+        # self.noisesnr   = {'noise':[0,15],'speech':[13,20],'music':[5,15]}
+        # self.numnoise   = {'noise':[1,1], 'speech':[3,7],  'music':[1,1] }
+        # self.noiselist  = {}
 
-#         augment_files   = glob.glob(os.path.join(musan_path,'*/*/*/*.wav'));
+        # augment_files   = glob.glob(os.path.join(musan_path,'*/*/*/*.wav'));
 
-#         for file in augment_files:
-#             if not file.split('/')[-4] in self.noiselist:
-#                 self.noiselist[file.split('/')[-4]] = []
-#             self.noiselist[file.split('/')[-4]].append(file)
+        # for file in augment_files:
+        #     if not file.split('/')[-4] in self.noiselist:
+        #         self.noiselist[file.split('/')[-4]] = []
+        #     self.noiselist[file.split('/')[-4]].append(file)
 
-#         self.rir_files  = glob.glob(os.path.join(rir_path,'*/*/*.wav'));
+        # self.rir_files  = glob.glob(os.path.join(rir_path,'*/*/*.wav'));
 
-#     def additive_noise(self, noisecat, audio):
+    def additive_noise(self, noisecat, audio):
 
-#         clean_db = 10 * numpy.log10(numpy.mean(audio ** 2)+1e-4) 
+        clean_db = 10 * numpy.log10(numpy.mean(audio ** 2)+1e-4) 
 
-#         numnoise    = self.numnoise[noisecat]
-#         noiselist   = random.sample(self.noiselist[noisecat], random.randint(numnoise[0],numnoise[1]))
+        # numnoise    = self.numnoise[noisecat]
+        # noiselist   = random.sample(self.noiselist[noisecat], random.randint(numnoise[0],numnoise[1]))
 
-#         noises = []
+        # noises = []
 
-#         for noise in noiselist:
+        # for noise in noiselist:
 
-#             noiseaudio  = loadWAV(noise, self.max_frames, evalmode=False)
-#             noise_snr   = random.uniform(self.noisesnr[noisecat][0],self.noisesnr[noisecat][1])
-#             noise_db = 10 * numpy.log10(numpy.mean(noiseaudio[0] ** 2)+1e-4) 
-#             noises.append(numpy.sqrt(10 ** ((clean_db - noise_db - noise_snr) / 10)) * noiseaudio)
+        #     noiseaudio  = loadWAV(noise, self.max_frames, evalmode=False)
+        #     noise_snr   = random.uniform(self.noisesnr[noisecat][0],self.noisesnr[noisecat][1])
+        #     noise_db = 10 * numpy.log10(numpy.mean(noiseaudio[0] ** 2)+1e-4) 
+        #     noises.append(numpy.sqrt(10 ** ((clean_db - noise_db - noise_snr) / 10)) * noiseaudio)
 
-#         return numpy.sum(numpy.concatenate(noises,axis=0),axis=0,keepdims=True) + audio
+        return numpy.sum(numpy.concatenate(noises,axis=0),axis=0,keepdims=True) + audio
 
-#     def reverberate(self, audio):
+    def reverberate(self, audio):
 
-#         rir_file    = random.choice(self.rir_files)
+        # rir_file    = random.choice(self.rir_files)
         
-#         rir, fs     = soundfile.read(rir_file)
-#         rir         = numpy.expand_dims(rir.astype(numpy.float),0)
-#         rir         = rir / numpy.sqrt(numpy.sum(rir**2))
+        # rir, fs     = soundfile.read(rir_file)
+        # rir         = numpy.expand_dims(rir.astype(numpy.float),0)
+        # rir         = rir / numpy.sqrt(numpy.sum(rir**2))
 
-#         return signal.convolve(audio, rir, mode='full')[:,:self.max_audio]
+        return signal.convolve(audio, rir, mode='full')[:,:self.max_audio]
 
 
-# class train_dataset_loader(Dataset):
-#     def __init__(self, train_list, augment, musan_path, rir_path, max_frames, train_path, **kwargs):
+class train_dataset_loader(Dataset):
+    def __init__(self, train_list, augment, max_frames, train_path, **kwargs):
 
-#         self.augment_wav = AugmentWAV(musan_path=musan_path, rir_path=rir_path, max_frames = max_frames)
+        self.augment_wav = AugmentWAV(max_frames = max_frames)
 
-#         self.train_list = train_list
-#         self.max_frames = max_frames;
-#         self.musan_path = musan_path
-#         self.rir_path   = rir_path
-#         self.augment    = augment
+        self.train_list = train_list
+        self.max_frames = max_frames;
+        # self.musan_path = musan_path
+        # self.rir_path   = rir_path
+        self.augment    = augment
         
-#         # Read training files
-#         with open(train_list) as dataset_file:
-#             lines = dataset_file.readlines();
+        # Read training files
+        with open(train_list) as dataset_file:
+            lines = dataset_file.readlines();
 
-#         # Make a dictionary of ID names and ID indices
-#         dictkeys = list(set([x.split()[0] for x in lines]))
-#         dictkeys.sort()
-#         dictkeys = { key : ii for ii, key in enumerate(dictkeys) }
+        # Make a dictionary of ID names and ID indices
+        dictkeys = list(set([x.split()[0] for x in lines]))
+        dictkeys.sort()
+        dictkeys = { key : ii for ii, key in enumerate(dictkeys) }
 
-#         # Parse the training list into file names and ID indices
-#         self.data_list  = []
-#         self.data_label = []
+        # Parse the training list into file names and ID indices
+        self.data_list  = []
+        self.data_label = []
         
-#         for lidx, line in enumerate(lines):
-#             data = line.strip().split();
+        for lidx, line in enumerate(lines):
+            data = line.strip().split();
 
-#             speaker_label = dictkeys[data[0]];
-#             filename = os.path.join(train_path,data[1]);
+            speaker_label = dictkeys[data[0]];
+            filename = os.path.join(train_path,data[1]);
             
-#             self.data_label.append(speaker_label)
-#             self.data_list.append(filename)
+            self.data_label.append(speaker_label)
+            self.data_list.append(filename)
 
-#     def __getitem__(self, indices):
+    def __getitem__(self, indices):
 
-#         feat = []
+        feat = []
 
-#         for index in indices:
+        for index in indices:
             
-#             audio = loadWAV(self.data_list[index], self.max_frames, evalmode=False)
+            audio = loadWAV(self.data_list[index], self.max_frames, evalmode=False)
             
-#             if self.augment:
-#                 augtype = random.randint(0,4)
-#                 if augtype == 1:
-#                     audio   = self.augment_wav.reverberate(audio)
-#                 elif augtype == 2:
-#                     audio   = self.augment_wav.additive_noise('music',audio)
-#                 elif augtype == 3:
-#                     audio   = self.augment_wav.additive_noise('speech',audio)
-#                 elif augtype == 4:
-#                     audio   = self.augment_wav.additive_noise('noise',audio)
+            if self.augment:
+                augtype = random.randint(0,4)
+                if augtype == 1:
+                    audio   = self.augment_wav.reverberate(audio)
+                elif augtype == 2:
+                    audio   = self.augment_wav.additive_noise('music',audio)
+                elif augtype == 3:
+                    audio   = self.augment_wav.additive_noise('speech',audio)
+                elif augtype == 4:
+                    audio   = self.augment_wav.additive_noise('noise',audio)
                     
-#             feat.append(audio);
+            feat.append(audio);
 
-#         feat = numpy.concatenate(feat, axis=0)
+        feat = numpy.concatenate(feat, axis=0)
 
-#         return torch.FloatTensor(feat), self.data_label[index]
+        return torch.FloatTensor(feat), self.data_label[index]
 
-#     def __len__(self):
-#         return len(self.data_list)
+    def __len__(self):
+        return len(self.data_list)
 
 
 
