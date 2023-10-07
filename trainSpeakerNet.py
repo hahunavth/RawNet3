@@ -35,7 +35,7 @@ parser.add_argument('--seed',           type=int,   default=10,     help='Seed f
 
 ## Training details
 parser.add_argument('--test_interval',  type=int,   default=10,     help='Test and save every [test_interval] epochs')
-parser.add_argument('--max_epoch',      type=int,   default=500,    help='Maximum number of epochs')
+parser.add_argument('--max_epoch',      type=int,   default=5,    help='Maximum number of epochs')
 parser.add_argument('--trainfunc',      type=str,   default="",     help='Loss function')
 
 ## Optimizer
