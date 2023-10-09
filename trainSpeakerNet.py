@@ -73,7 +73,7 @@ parser.add_argument('--save_path',      type=str,   default="exps/exp1", help='P
 parser.add_argument('--train_list', type=str,   default="/kaggle/working/RawNet3-VLSP2023/train_list.txt", help='The path of the training list')
 parser.add_argument('--train_path', type=str,   default="/kaggle/input/vlsp-sv-2023/vietnam_celeb", help='The path of the training data')
 parser.add_argument('--test_list',  type=str,   default="/kaggle/working/RawNet3-VLSP2023/eval_list.txt", help='The path of the evaluation list')
-parser.add_argument('--test_path',  type=str,   default="/kaggle/input/vlsp-sv-2023/vietnam_celeb", help='The path of the evaluation data')
+parser.add_argument('--test_path',  type=str,   default="/kaggle/input/vlsp-sv-2023/spoofing_data", help='The path of the evaluation data')
 # parser.add_argument('--initial_model',  type=str, default="", help='Path of the initial_model')
 
 ## Model definition
