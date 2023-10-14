@@ -84,6 +84,8 @@ class AugmentWAV(object):
         noiselist   = random.sample(self.noiselist[noisecat], random.randint(numnoise[0],numnoise[1]))
 
         noises = []
+        if 'noise' not in self.noiselist:
+            self.noiselist['noise'] = []
 
         for noise in noiselist:
 
