@@ -67,34 +67,78 @@ class AugmentWAV(object):
         self.numnoise   = {'noise':[1,1], 'speech':[3,7],  'music':[1,1] }
         self.noiselist  = {}
 
-        augment_files   = glob.glob(os.path.join(musan_path,'*/*/*/*.wav'));
+        augment_files = []
+
+        # Use a single loop to find files with the pattern */*/*/*.wav
+        for noisecat in os.listdir(musan_path):
+            noise_cat_1 = os.path.join(musan_path, noisecat)
+            if os.path.isdir(noise_cat_1):
+                for noise_cat_2 in os.listdir(noise_cat_1):
+                    noise_id = os.path.join(noise_cat_1, noise_cat_2)
+                    if os.path.isdir(noise_id):
+                        for file_name in os.listdir(noise_id):
+                            if file_name.endswith(".wav"):
+                                augment_files.append(
+                                    os.path.join(noise_id, file_name))
 
         for file in augment_files:
-            if not file.split('/')[-4] in self.noiselist:
-                self.noiselist[file.split('/')[-4]] = []
-            self.noiselist[file.split('/')[-4]].append(file)
+            if file.split('/')[-3] not in self.noiselist:
+                print(file.split('/')[-3])
+                self.noiselist[file.split('/')[-3]] = []
+            self.noiselist[file.split('/')[-3]].append(file)
 
-        self.rir_files  = glob.glob(os.path.join(rir_path,'*/*/*.wav'));
+        self.rir_files = glob.glob(os.path.join(rir_path, '*/*/*.wav'))
+
+
+        # augment_files   = glob.glob(os.path.join(musan_path,'*/*/*/*.wav'));
+
+        # for file in augment_files:
+        #     if not file.split('/')[-4] in self.noiselist:
+        #         self.noiselist[file.split('/')[-4]] = []
+        #     self.noiselist[file.split('/')[-4]].append(file)
+
+        # self.rir_files  = glob.glob(os.path.join(rir_path,'*/*/*.wav'));
 
     def additive_noise(self, noisecat, audio):
 
-        clean_db = 10 * numpy.log10(numpy.mean(audio ** 2)+1e-4) 
+        # clean_db = 10 * numpy.log10(numpy.mean(audio ** 2)+1e-4) 
 
-        numnoise    = self.numnoise[noisecat]
-        noiselist   = random.sample(self.noiselist[noisecat], random.randint(numnoise[0],numnoise[1]))
+        # numnoise    = self.numnoise[noisecat]
+        # noiselist   = random.sample(self.noiselist[noisecat], random.randint(numnoise[0],numnoise[1]))
 
+        # noises = []      
+
+        # for noise in noiselist:
+
+        #     noiseaudio  = loadWAV(noise, self.max_frames, evalmode=False)
+        #     noise_snr   = random.uniform(self.noisesnr[noisecat][0],self.noisesnr[noisecat][1])
+        #     noise_db = 10 * numpy.log10(numpy.mean(noiseaudio[0] ** 2)+1e-4) 
+        #     noises.append(numpy.sqrt(10 ** ((clean_db - noise_db - noise_snr) / 10)) * noiseaudio)
+
+        # return numpy.sum(numpy.concatenate(noises,axis=0),axis=0,keepdims=True) + audio
+        clean_db = 10 * numpy.log10(numpy.mean(audio ** 2)+1e-4)
+        numnoise = self.numnoise[noisecat]
+        noiselist = random.sample(
+            self.noiselist[noisecat], random.randint(numnoise[0], numnoise[1]))
         noises = []
-        if 'noise' not in self.noiselist:
-            self.noiselist['noise'] = []
-
         for noise in noiselist:
-
-            noiseaudio  = loadWAV(noise, self.max_frames, evalmode=False)
-            noise_snr   = random.uniform(self.noisesnr[noisecat][0],self.noisesnr[noisecat][1])
-            noise_db = 10 * numpy.log10(numpy.mean(noiseaudio[0] ** 2)+1e-4) 
-            noises.append(numpy.sqrt(10 ** ((clean_db - noise_db - noise_snr) / 10)) * noiseaudio)
-
-        return numpy.sum(numpy.concatenate(noises,axis=0),axis=0,keepdims=True) + audio
+            noiseaudio, sr = soundfile.read(noise)
+            length = self.num_frames * 160 + 240
+            if noiseaudio.shape[0] <= length:
+                shortage = length - noiseaudio.shape[0]
+                noiseaudio = numpy.pad(noiseaudio, (0, shortage), 'wrap')
+            start_frame = numpy.int64(
+                random.random()*(noiseaudio.shape[0]-length))
+            noiseaudio = noiseaudio[start_frame:start_frame + length]
+            noiseaudio = numpy.stack([noiseaudio], axis=0)
+            noise_db = 10 * numpy.log10(numpy.mean(noiseaudio ** 2)+1e-4)
+            noisesnr = random.uniform(
+                self.noisesnr[noisecat][0], self.noisesnr[noisecat][1])
+            noises.append(numpy.sqrt(
+                10 ** ((clean_db - noise_db - noisesnr) / 10)) * noiseaudio)
+        noise = numpy.sum(numpy.concatenate(
+            noises, axis=0), axis=0, keepdims=True)
+        return noise + audio
 
     def reverberate(self, audio):
 
