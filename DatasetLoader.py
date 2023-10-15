@@ -123,7 +123,7 @@ class AugmentWAV(object):
         noises = []
         for noise in noiselist:
             noiseaudio, sr = soundfile.read(noise)
-            length = self.num_frames * 160 + 240
+            length = self.max_frames * 160 + 240
             if noiseaudio.shape[0] <= length:
                 shortage = length - noiseaudio.shape[0]
                 noiseaudio = numpy.pad(noiseaudio, (0, shortage), 'wrap')
