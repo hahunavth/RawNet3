@@ -116,7 +116,7 @@ class AugmentWAV(object):
         #     noises.append(numpy.sqrt(10 ** ((clean_db - noise_db - noise_snr) / 10)) * noiseaudio)
 
         # return numpy.sum(numpy.concatenate(noises,axis=0),axis=0,keepdims=True) + audio
-        clean_db = 10 * numpy.log10(numpy.mean(audio ** 2)+1e-4)
+        clean_db = numpy.log10(numpy.mean(audio ** 2)+1e-4)
         numnoise = self.numnoise[noisecat]
         noiselist = random.sample(
             self.noiselist[noisecat], random.randint(numnoise[0], numnoise[1]))
