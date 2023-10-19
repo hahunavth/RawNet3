@@ -19,7 +19,7 @@ warnings.simplefilter("ignore")
 ## ===== ===== ===== ===== ===== ===== ===== =====
 ## Parse arguments
 ## ===== ===== ===== ===== ===== ===== ===== =====
-
+    
 parser = argparse.ArgumentParser(description = "SpeakerNet")
 
 parser.add_argument('--config',         type=str,   default=None,   help='Config YAML file')
