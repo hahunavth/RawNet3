@@ -25,8 +25,8 @@ class LossFunction(nn.Module):
         
         # print(x.size()[1])
         # x.size()[1] == 256
-        print(x.size())
-        assert x.size()[1] == 2
+        # print(x.size())
+        assert x.size()[1] == 256
         
         out_anchor      = F.normalize(x[:,0,:], p=2, dim=1)
         out_positive    = F.normalize(x[:,1,:], p=2, dim=1)
