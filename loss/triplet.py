@@ -24,7 +24,8 @@ class LossFunction(nn.Module):
     def forward(self, x, label=None):
         
         # print(x.size()[1])
-        # assert x.size()[1] == 256
+        # x.size()[1] == 256
+        print(x)
         assert x.size()[1] == 2
         
         out_anchor      = F.normalize(x[:,0,:], p=2, dim=1)
