@@ -28,8 +28,8 @@ class LossFunction(nn.Module):
         # print(x.size())
         assert x.size()[1] == 256
         
-        out_anchor      = F.normalize(x[:,0,:], p=2, dim=1)
-        out_positive    = F.normalize(x[:,1,:], p=2, dim=1)
+        out_anchor      = F.normalize(x[:,0], p=2, dim=1)
+        out_positive    = F.normalize(x[:,1], p=2, dim=1)
         stepsize        = out_anchor.size()[0]
 
         output      = -1 * (F.pairwise_distance(out_anchor.unsqueeze(-1),out_positive.unsqueeze(-1).transpose(0,2))**2)
