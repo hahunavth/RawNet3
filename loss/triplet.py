@@ -22,8 +22,9 @@ class LossFunction(nn.Module):
         print('Initialised Triplet Loss')
 
     def forward(self, x, label=None):
-
-        assert x.size()[1] == 3
+        
+        print(x.size()[1]+ " " + out_anchor.size()[0])
+        assert x.size()[1] == 2
         
         out_anchor      = F.normalize(x[:,0,:], p=2, dim=1)
         out_positive    = F.normalize(x[:,1,:], p=2, dim=1)
