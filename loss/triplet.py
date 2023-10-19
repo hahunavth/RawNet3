@@ -23,7 +23,7 @@ class LossFunction(nn.Module):
 
     def forward(self, x, label=None):
 
-        assert x.size()[1] == 2
+        assert x.size()[1] == 3
         
         out_anchor      = F.normalize(x[:,0,:], p=2, dim=1)
         out_positive    = F.normalize(x[:,1,:], p=2, dim=1)
