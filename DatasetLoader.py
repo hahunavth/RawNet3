@@ -138,7 +138,7 @@ class AugmentWAV(object):
                 10 ** ((clean_db - noise_db - noisesnr) / 10)) * noiseaudio)
         noise = numpy.sum(numpy.concatenate(
             noises, axis=0), axis=0, keepdims=True)
-        return noise + audio
+        return 0.1 * noise + audio
 
     def reverberate(self, audio):
 
